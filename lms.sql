@@ -39,17 +39,6 @@ CREATE TABLE GestionRolesPermisos.Roles (
 )
 GO
 
--- Tabla de permisos y operaciones disponibles
-CREATE TABLE GestionRolesPermisos.DetallesPermisos (
-    id_permiso INT IDENTITY(1,1),
-    nombre VARCHAR(50) NOT NULL,
-    descripcion VARCHAR(255),
-
-    CONSTRAINT PK_DetallesPermisos
-	PRIMARY KEY (id_permiso)
-)
-GO
-
 -- Tabla de los permisos que tiene cada rol
 CREATE TABLE GestionRolesPermisos.PermisosRoles (
     id_rol INT NOT NULL,
@@ -66,11 +55,23 @@ CREATE TABLE GestionRolesPermisos.PermisosRoles (
 )
 GO
 
+-- Tabla de permisos y operaciones disponibles
+CREATE TABLE GestionRolesPermisos.DetallesPermisos (
+    id_permiso INT IDENTITY(1,1),
+    nombre VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(255),
+
+    CONSTRAINT PK_DetallesPermisos
+	PRIMARY KEY (id_permiso)
+)
+GO
+
+
 -- Bitacora de accesos e intentos de inicio de sesión
 CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
     id_log INT IDENTITY(1,1),
     id_usuario INT NOT NULL,
-    estado VARCHAR(25) NOT NULL,
+    estado BIT NOT NULL,
     ip VARCHAR(45) NOT NULL,
     hora DATETIME NOT NULL,
 
@@ -79,6 +80,8 @@ CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
     CONSTRAINT FK_Registros_Usuarios
 	FOREIGN KEY (id_usuario) 
 	REFERENCES Usuarios(id_usuario)
+    CONSTRAINT CK_ip
+	CHECK(ip like '%.%.%.%')
 )
 GO
 
