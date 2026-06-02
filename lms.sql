@@ -20,83 +20,52 @@ GO
 CREATE SCHEMA GestionRolesPermisos
 GO
 
--- Modulo 1: GestionRolesPermisos
-
 -- Tabla 1.1: Roles
 CREATE TABLE GestionRolesPermisos.Roles (
-    id_rol INT IDENTITY(1,1)
+    id_rol INT IDENTITY(1,1) CONSTRAINT PK_roles PRIMARY KEY
 	, nombre NVARCHAR(50) NOT NULL
-	, descripcion NVARCHAR(255)
+	, descripcion NVARCHAR(255) NOT NULL
     , created_at DATETIME DEFAULT GETDATE()
-	, updated_at DATETIME NULL
-	, deleted_at DATETIME NULL
-    , CONSTRAINT PK_roles PRIMARY KEY (id_rol),
-)
-GO
-
--- Tabla de los permisos que tiene cada rol
-CREATE TABLE GestionRolesPermisos.PermisosRoles (
-    id_rol INT 
-	NOT NULL,
-    id_permiso INT 
-	NOT NULL,
-    createdAt DATETIME 
-	DEFAULT GETDATE(),
-    updatedAt DATETIME 
-	NULL,
-    deletedAt DATETIME 
-	NULL,
-    
-    CONSTRAINT PK_PermisosRoles 
-	PRIMARY KEY (id_rol, id_permiso),
-    CONSTRAINT FK_Permisos_DetallesRol 
-	FOREIGN KEY (id_rol) 
-	REFERENCES DetallesRol(id_rol),
-    CONSTRAINT FK_Permisos_DetallesPermisos 
-	FOREIGN KEY (id_permiso) 
-	REFERENCES DetallesPermisos(id_permiso)
+	, updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at)
+	, deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at)
 )
 GO
 
 -- Tabla de permisos y operaciones disponibles
 CREATE TABLE GestionRolesPermisos.DetallesPermisos (
-    id_permiso INT IDENTITY(1,1),
-    nombre VARCHAR(50) 
-	NOT NULL,
-    descripcion VARCHAR(255),
-    createdAt DATETIME 
-	DEFAULT GETDATE(),
-    updatedAt DATETIME 
-	NULL,
-    deletedAt DATETIME 
-	NULL,
-
-    CONSTRAINT PK_DetallesPermisos
-	PRIMARY KEY (id_permiso)
+    id_permiso INT IDENTITY(1,1)
+	, nombre NVARCHAR(50) NOT NULL
+    , descripcion NVARCHAR(255) NOT NULL
+	, created_at DATETIME DEFAULT GETDATE()
+	, updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at)
+	, deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at)
+	, CONSTRAINT PK_DetallesPermisos PRIMARY KEY (id_permiso)
 )
 GO
 
+-- Tabla de los permisos que tiene cada rol
+CREATE TABLE GestionRolesPermisos.PermisosRoles (
+    id_rol INT NOT NULL
+    , id_permiso INT NOT NULL
+    , created_at DATETIME DEFAULT GETDATE()
+	, updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at)
+	, deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at)
+	, CONSTRAINT PK_PermisosRoles PRIMARY KEY (id_rol, id_permiso)
+	, CONSTRAINT FK_Permisos_DetallesRol FOREIGN KEY (id_rol) REFERENCES GestionRolesPermisos.Roles(id_rol)
+	, CONSTRAINT FK_Permisos_DetallesPermisos FOREIGN KEY (id_permiso) REFERENCES GestionRolesPermisos.DetallesPermisos(id_permiso)
+)
+GO
 
 -- Bitacora de accesos e intentos de inicio de sesión
 CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
-    id_log INT IDENTITY(1,1),
-    id_usuario INT 
-	NOT NULL,
-    estado BIT 
-	NOT NULL,
-    ip VARCHAR(45)
-	NOT NULL,
-    hora DATETIME
-	NOT NULL
-	DEFAULT GETDATE(),
-
-    CONSTRAINT PK_RegistrosAcceso 
-	PRIMARY KEY (id_log),
-    CONSTRAINT FK_Registros_Usuarios
-	FOREIGN KEY (id_usuario) 
-	REFERENCES Usuarios(id_usuario)
-    CONSTRAINT CK_ip
-	CHECK(ip like '%.%.%.%')
+    id_log INT IDENTITY(1,1)
+	, id_usuario INT NOT NULL
+	, estado BIT NOT NULL
+	, ip NVARCHAR(45) NOT NULL
+	, fecha_hora DATETIME NOT NULL DEFAULT GETDATE()
+	, CONSTRAINT PK_RegistrosAcceso PRIMARY KEY (id_log)
+	, CONSTRAINT FK_Registros_Usuarios FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+    , CONSTRAINT CK_ip CHECK(ip like '%.%.%.%')
 )
 GO
 
