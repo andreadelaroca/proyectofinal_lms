@@ -24,7 +24,7 @@ GO
 CREATE SCHEMA GestionTutores
 GO
 
---Módulo 4: Gestión de Eventos y Sesiones Académicas
+--Mï¿½dulo 4: Gestiï¿½n de Eventos y Sesiones Acadï¿½micas
 CREATE SCHEMA GestionEventos
 GO
 
@@ -76,5 +76,129 @@ CREATE TABLE GestionEventos.FeedbackEvaluaciones (
 	, id_inscripcion INT FOREIGN KEY REFERENCES GestionEventos.Inscripciones(id_inscripcion)
 	, comentario NVARCHAR(255) NOT NULL
 	, puntuacion_tutor TINYINT CONSTRAINT CK_participacion_tutor CHECK(puntuacion_tutor BETWEEN 0 AND 5)
+)
+GO
+CREATE SCHEMA GestionEventosSesiones
+GO
+
+-- Modulo 1: GestionRolesPermisos
+
+CREATE TABLE GestionRolesPermisos.Roles (
+    id_rol INT IDENTITY(1,1),
+    nombre VARCHAR(50) 
+	NOT NULL,
+    descripcion VARCHAR(255),
+
+    createdAt DATETIME 
+	DEFAULT GETDATE(),
+    updatedAt DATETIME 
+	NULL,
+    deletedAt DATETIME 
+	NULL,
+    
+    CONSTRAINT PK_Roles 
+	PRIMARY KEY (id_rol),
+)
+GO
+
+-- Tabla de los permisos que tiene cada rol
+CREATE TABLE GestionRolesPermisos.PermisosRoles (
+    id_rol INT 
+	NOT NULL,
+    id_permiso INT 
+	NOT NULL,
+    createdAt DATETIME 
+	DEFAULT GETDATE(),
+    updatedAt DATETIME 
+	NULL,
+    deletedAt DATETIME 
+	NULL,
+    
+    CONSTRAINT PK_PermisosRoles 
+	PRIMARY KEY (id_rol, id_permiso),
+    CONSTRAINT FK_Permisos_DetallesRol 
+	FOREIGN KEY (id_rol) 
+	REFERENCES DetallesRol(id_rol),
+    CONSTRAINT FK_Permisos_DetallesPermisos 
+	FOREIGN KEY (id_permiso) 
+	REFERENCES DetallesPermisos(id_permiso)
+)
+GO
+
+-- Tabla de permisos y operaciones disponibles
+CREATE TABLE GestionRolesPermisos.DetallesPermisos (
+    id_permiso INT IDENTITY(1,1),
+    nombre VARCHAR(50) 
+	NOT NULL,
+    descripcion VARCHAR(255),
+    createdAt DATETIME 
+	DEFAULT GETDATE(),
+    updatedAt DATETIME 
+	NULL,
+    deletedAt DATETIME 
+	NULL,
+
+    CONSTRAINT PK_DetallesPermisos
+	PRIMARY KEY (id_permiso)
+)
+GO
+
+
+-- Bitacora de accesos e intentos de inicio de sesiÃ³n
+CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
+    id_log INT IDENTITY(1,1),
+    id_usuario INT 
+	NOT NULL,
+    estado BIT 
+	NOT NULL,
+    ip VARCHAR(45)
+	NOT NULL,
+    hora DATETIME
+	NOT NULL
+	DEFAULT GETDATE(),
+
+    CONSTRAINT PK_RegistrosAcceso 
+	PRIMARY KEY (id_log),
+    CONSTRAINT FK_Registros_Usuarios
+	FOREIGN KEY (id_usuario) 
+	REFERENCES Usuarios(id_usuario)
+    CONSTRAINT CK_ip
+	CHECK(ip like '%.%.%.%')
+)
+GO
+
+-- Tabla general del historial de auditorÃ­a
+CREATE TABLE GestionRolesPermisos.AuditoriaHistorial (
+    id_audit INT IDENTITY(1,1),
+    id_usuario INT
+	NOT NULL,
+
+    CONSTRAINT PK_AuditoriaHistorial
+	PRIMARY KEY (id_audit),
+    CONSTRAINT FK_Historial_Usuarios
+	FOREIGN KEY (id_usuario)
+	REFERENCES Usuarios(id_usuario)
+)
+GO
+
+-- Detalle tÃ©cnico del "antes" y "despuÃ©s" de cada cambio en los datos
+CREATE TABLE GestionRolesPermisos.Auditoria (
+    id_audit INT 
+	NOT NULL,
+    tabla VARCHAR(50) 
+	NOT NULL,
+    columna VARCHAR(50) 
+	NOT NULL,
+    tupla INT NOT NULL,
+    id_operacion INT 
+	NOT NULL,
+    estado_anterior VARCHAR(MAX),
+    estado_actual VARCHAR(MAX),
+    fecha DATETIME 
+	NOT NULL,
+    
+    CONSTRAINT FK_Auditoria_Historial
+	FOREIGN KEY (id_audit)
+	REFERENCES AuditoriaHistorial(id_audit)
 )
 GO
