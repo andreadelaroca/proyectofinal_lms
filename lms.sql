@@ -37,6 +37,16 @@ CREATE TABLE Sesiones (
 	, hora_inicio DATETIME NOT NULL
 	, hora_fin DATETIME NOT NULL
 	, ubicacion NVARCHAR(60) NOT NULL
-	, cupo_max INT CONSTRAINT CK_cupo_max_val CHECK(cupo_max > 0)
+	, cupo_max INT NOT NULL CONSTRAINT CK_cupo_max_val CHECK(cupo_max > 0)
+)
+GO
+
+--Tabla 4.2: Inscripciones
+CREATE TABLE Inscripciones (
+	id_inscripcion INT IDENTITY(1,1) CONSTRAINT PK_id_inscripcion PRIMARY KEY
+	, id_estudiante INT FK_id_estudiante CONSTRAINT FOREIGN KEY REFERENCES Tutores(id_tutor)
+	, id_sesion INT FK_id_sesion CONSTRAINT FOREIGN KEY REFERENCES Sesiones(id_sesion)
+	, fecha_inscripcion DATE CONSTRAINT DF_fecha_inscripcion DEFAULT GETDATE()
+	, estado BIT CONSTRAINT DF_estado DEFAULT 0
 )
 GO
