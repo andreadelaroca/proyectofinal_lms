@@ -62,10 +62,19 @@ CREATE TABLE Asistencias (
 	id_asistencia INT IDENTITY(1,1) CONSTRAINT PK_id_inscripcion PRIMARY KEY
 	, id_inscripcion INT CONSTRAINT FK_id_inscripcion FOREIGN KEY REFERENCES Inscripciones(id_inscripcion)
 	, estatus_asistencia NVARCHAR(30) CONSTRAINT CK_estatus_asistencia CHECK(estatus_asistencia IN ('Presente', 'Tarde', 'Falta justificada', 'Falta injustificada'))
-	, participacion DECIMAL(2,2) CONSTRAINT CK_participacion CHECK(participacion BETWEEN 0.0 AND 10.0)
+	, participacion TINYINT CONSTRAINT CK_participacion CHECK(participacion BETWEEN 0 AND 5)
 	, fecha_registro DATE NOT NULL
 	, created_at DATETIME CONSTRAINT DF_created_at_ses DEFAULT GETDATE()
 	, updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at)
 	, deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at)
+)
+GO
+
+--Tabla 4.4: FeedbackEvaluaciones
+CREATE TABLE FeedbackEvaluaciones (
+	id_feedback INT IDENTITY(1,1) CONSTRAINT PK_id_feedback PRIMARY KEY
+	, id_inscripcion INT FOREIGN KEY REFERENCES Inscripciones(id_inscripcion)
+	, comentario NVARCHAR(255) NOT NULL
+	, puntuacion_tutor TINYINT CONSTRAINT CK_participacion_tutor CHECK(puntuacion_tutor BETWEEN 0 AND 5)
 )
 GO
