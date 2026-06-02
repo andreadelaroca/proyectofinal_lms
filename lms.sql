@@ -25,11 +25,11 @@ CREATE SCHEMA GestionTutores
 GO
 
 --Módulo 4: Gestión de Eventos y Sesiones Académicas
-CREATE SCHEMA GestionEventosSesiones
+CREATE SCHEMA GestionEventos
 GO
 
 --Tabla 4.1: Sesiones
-CREATE TABLE Sesiones (
+CREATE TABLE GestionEventos.Sesiones (
 	id_sesion INT IDENTITY(1,1) CONSTRAINT PK_id_sesion PRIMARY KEY
 	, id_tutor INT CONSTRAINT FK_id_tutor FOREIGN KEY REFERENCES Tutores(id_tutor)
 	, id_materia INT CONSTRAINT FK_id_materia FOREIGN KEY REFERENCES Materias(id_materia)
@@ -45,7 +45,7 @@ CREATE TABLE Sesiones (
 GO
 
 --Tabla 4.2: Inscripciones
-CREATE TABLE Inscripciones (
+CREATE TABLE GestionEventos.Inscripciones (
 	id_inscripcion INT IDENTITY(1,1) CONSTRAINT PK_id_inscripcion PRIMARY KEY
 	, id_estudiante INT CONSTRAINT FK_id_estudiante FOREIGN KEY REFERENCES Tutores(id_tutor)
 	, id_sesion INT CONSTRAINT FK_id_sesion FOREIGN KEY REFERENCES Sesiones(id_sesion)
@@ -58,7 +58,7 @@ CREATE TABLE Inscripciones (
 GO
 
 --Tabla 4.3: Asistencias
-CREATE TABLE Asistencias (
+CREATE TABLE GestionEventos.Asistencias (
 	id_asistencia INT IDENTITY(1,1) CONSTRAINT PK_id_inscripcion PRIMARY KEY
 	, id_inscripcion INT CONSTRAINT FK_id_inscripcion FOREIGN KEY REFERENCES Inscripciones(id_inscripcion)
 	, estatus_asistencia NVARCHAR(30) CONSTRAINT CK_estatus_asistencia CHECK(estatus_asistencia IN ('Presente', 'Tarde', 'Falta justificada', 'Falta injustificada'))
@@ -71,7 +71,7 @@ CREATE TABLE Asistencias (
 GO
 
 --Tabla 4.4: FeedbackEvaluaciones
-CREATE TABLE FeedbackEvaluaciones (
+CREATE TABLE GestionEventos.FeedbackEvaluaciones (
 	id_feedback INT IDENTITY(1,1) CONSTRAINT PK_id_feedback PRIMARY KEY
 	, id_inscripcion INT FOREIGN KEY REFERENCES Inscripciones(id_inscripcion)
 	, comentario NVARCHAR(255) NOT NULL
