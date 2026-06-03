@@ -40,6 +40,23 @@ CREATE TABLE GestionIdentidadAcad.Usuarios (
 )
 GO
 
+-- Tabla Perfil de datos de los usuarios
+CREATE TABLE GestionIdentidadAcad.Perfiles_Datos (
+    id_perfil INT IDENTITY(1,1) PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    nombre NVARCHAR(100) NOT NULL,
+    apellido NVARCHAR(100) NOT NULL,
+    telefono NVARCHAR(20) NULL,
+    carrera NVARCHAR(100) NULL,
+    cif NVARCHAR(20) UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at),
+    deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at),
+    CONSTRAINT FK_Perfiles_Usuarios FOREIGN KEY (id_usuario)
+        REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
+)
+GO
+
 CREATE SCHEMA GestionTutores
 GO
 
