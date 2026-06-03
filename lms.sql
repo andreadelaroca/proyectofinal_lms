@@ -57,6 +57,19 @@ CREATE TABLE GestionIdentidadAcad.Perfiles_Datos (
 )
 GO
 
+-- Tabla materias
+CREATE TABLE GestionIdentidadAcad.Materias (
+    id_mat INT IDENTITY(1,1) PRIMARY KEY,      
+    nombre_materia NVARCHAR(100) UNIQUE NOT NULL,  
+    id_usuario INT NOT NULL,  
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at),
+	deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at),
+    CONSTRAINT FK_Materias_Usuarios FOREIGN KEY (id_usuario)
+        REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
+)
+GO
+
 CREATE SCHEMA GestionTutores
 GO
 
