@@ -16,8 +16,17 @@ GO
 USE lmsDB
 GO
 
---Módulo 1: Gestión de Roles y Permisos
+--Creación de esquemas para cada módulo
 CREATE SCHEMA GestionRolesPermisos
+GO
+
+CREATE SCHEMA GestionIdentidadAcad
+GO
+
+CREATE SCHEMA GestionTutores
+GO
+
+CREATE SCHEMA GestionEventos
 GO
 
 -- Tabla 1.1: Roles
@@ -105,12 +114,7 @@ CREATE TABLE GestionRolesPermisos.Auditoria (
 )
 GO
 
-CREATE SCHEMA GestionIdentidadAcad
-GO
 
--- Modulo 2: Gestion de identidad academica
-CREATE SCHEMA GestionIdentidadAcad
-GO
 
 -- Tabla Usuarios
 CREATE TABLE GestionIdentidadAcad.Usuarios (
@@ -125,13 +129,6 @@ CREATE TABLE GestionIdentidadAcad.Usuarios (
     CONSTRAINT FK_Usuarios_Roles FOREIGN KEY (id_rol)
         REFERENCES GestionRolesPermisos.Roles(id_rol)                  
 )
-GO
-
-CREATE SCHEMA GestionTutores
-GO
-
---Módulo 4: Gesti�n de Eventos y Sesiones Acad�micas
-CREATE SCHEMA GestionEventos
 GO
 
 --Tabla 4.1: Sesiones
@@ -183,8 +180,6 @@ CREATE TABLE GestionEventos.FeedbackEvaluaciones (
 	, comentario NVARCHAR(255) NOT NULL
 	, puntuacion_tutor TINYINT CONSTRAINT CK_participacion_tutor CHECK(puntuacion_tutor BETWEEN 0 AND 5)
 )
-GO
-CREATE SCHEMA GestionEventosSesiones
 GO
 
 -- Tabla 3.1 HORARIOS_TUTOR
