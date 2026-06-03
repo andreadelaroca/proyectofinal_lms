@@ -114,8 +114,7 @@ GO
 
 -- Detalle técnico del "antes" y "después" de cada cambio en los datos
 CREATE TABLE GestionRolesPermisos.Auditoria (
-    id_audit INT 
-	NOT NULL,
+    id_audit INT NOT NULL,
     tabla VARCHAR(50) 
 	NOT NULL,
     columna VARCHAR(50) 
@@ -134,59 +133,57 @@ CREATE TABLE GestionRolesPermisos.Auditoria (
 )
 GO
 
--- Tabla 3.1 HORARIOS_TUTOR
-
-CREATE TABLE HORARIOS_TUTOR (
-    id_horario INT IDENTITY(1,1) PRIMARY KEY,
-    id_tutor INT NOT NULL,
-    horario TIME NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT GETDATE(),
-    updated_at DATETIME NULL,
-
-    CONSTRAINT FK_HORARIOS_TUTOR_TUTORES
-        FOREIGN KEY (id_tutor) REFERENCES TUTORES(id_tutor)
+CREATE TABLE GestionTutores.Tutores (
+    id_tutor INT CONSTRAINT PK_Tutores PRIMARY KEY
+    , estado_tutor BIT NOT NULL DEFAULT 0
+    , created_at DATETIME DEFAULT GETDATE()
+    , updated_at DATETIME NULL
+    , CONSTRAINT FK_Tutores_Usuarios FOREIGN KEY (id_tutor) REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
 )
 GO
 
+-- Tabla 3.1 HORARIOS_TUTOR
+CREATE TABLE GestionTutores.HorariosTutor (
+    id_horario INT IDENTITY(1,1) PRIMARY KEY,
+    id_tutor INT NOT NULL,
+    dia_semana INT NOT NULL CHECK(dia_semana BETWEEN 1 AND 7)
+    , hora_inicio TIME NOT NULL
+    , hora_fin TIME NOT NULL
+    , created_at DATETIME NOT NULL DEFAULT GETDATE()
+    , updated_at DATETIME NULL
+    , CONSTRAINT FK_HorariosTutor_Tutores FOREIGN KEY (id_tutor) REFERENCES GestionTutores.Tutores(id_tutor)
+    , CONSTRAINT CK_HorariosTutor_Horas CHECK(hora_fin > hora_inicio)
+)
+GO
 
 -- Tabla 3.2 TUTOR_MATERIA
 
-CREATE TABLE TUTOR_MATERIA (
+CREATE TABLE GestionTutores.TutorMateria (
     id_tutor_materia INT IDENTITY(1,1) PRIMARY KEY,
     id_tutor INT NOT NULL,
-    id_mat INT NOT NULL,
+    id_materia INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
     updated_at DATETIME NULL,
-
-    CONSTRAINT FK_TUTOR_MATERIA_TUTORES
-        FOREIGN KEY (id_tutor) REFERENCES TUTORES(id_tutor),
-
-    CONSTRAINT FK_TUTOR_MATERIA_MATERIAS
-        FOREIGN KEY (id_mat) REFERENCES MATERIAS(id_mat),
-
-    CONSTRAINT UQ_TUTOR_MATERIA
-        UNIQUE (id_tutor, id_mat)
+    CONSTRAINT CK_tutormat_updated CHECK(updated_at IS NULL OR updated_at >= created_at)
+    , CONSTRAINT FK_TUTOR_MATERIA_TUTORES FOREIGN KEY(id_tutor) REFERENCES GestionTutores.Tutores(id_tutor),
+    CONSTRAINT FK_TUTOR_MATERIA_MATERIAS FOREIGN KEY(id_materia) REFERENCES GestionIdentidadAcad.Materias(id_materia),
+    CONSTRAINT UQ_TUTOR_MATERIA UNIQUE(id_tutor, id_materia)
 )
 GO
 
 
 -- Tabla 3.3 TUTORES_VALIDACION
-
 CREATE TABLE GestionTutores.TutoresValidacion (
     id_validacion INT IDENTITY(1,1) PRIMARY KEY,
     id_tutor INT NOT NULL,
     is_valid BIT NOT NULL DEFAULT 0,
     created_at DATETIME NOT NULL DEFAULT GETDATE(),
-    updated_at DATETIME NULL,
-
-    CONSTRAINT FK_TUTORES_VALIDACION_TUTORES
-        FOREIGN KEY (id_tutor) REFERENCES TUTORES(id_tutor),
-
-    CONSTRAINT UQ_TUTORES_VALIDACION
-        UNIQUE (id_tutor)
+    updated_at DATETIME NULL
+    , CONSTRAINT CK_tutvalidacion_updated CHECK(updated_at IS NULL OR updated_at >= created_at)
+    ,CONSTRAINT FK_TUTORES_VALIDACION_TUTORES FOREIGN KEY(id_tutor) REFERENCES GestionTutores.Tutores(id_tutor),
+    CONSTRAINT UQ_TUTORES_VALIDACION UNIQUE (id_tutor)
 )
 GO
-
 
 -- Tabla 3.4 ACREDITACIONES
 CREATE TABLE GestionTutores.Acreditaciones (
