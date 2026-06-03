@@ -70,6 +70,59 @@ CREATE TABLE GestionIdentidadAcad.Materias (
 )
 GO
 
+-- Tabla de Disponibilidad
+CREATE TABLE GestionIdentidadAcad.Disponibilidad (
+    id_disp INT IDENTITY(1,1) PRIMARY KEY,
+    id_tutor INT NOT NULL,
+    dia_semana NVARCHAR(15) NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at),
+    deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at),
+    CONSTRAINT FK_Disponibilidad_Tutor FOREIGN KEY (id_tutor)
+        REFERENCES GestionIdentidadAcad.Usuarios(id_usuario),
+    CONSTRAINT CK_Horas_Validas CHECK (hora_inicio < hora_fin)
+)
+GO
+
+-- Tabla de Sesiones
+CREATE TABLE GestionIdentidadAcad.Sesiones (
+    id_sesion INT IDENTITY(1,1) PRIMARY KEY,
+    id_tutor INT NOT NULL,
+    id_mat INT NOT NULL,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    lugar NVARCHAR(255) NULL,
+    cupo_maximo INT NOT NULL CHECK (cupo_maximo > 0),
+    estado BIT DEFAULT 1,
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at),
+    deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at),
+    CONSTRAINT FK_Sesiones_Tutor FOREIGN KEY (id_tutor)
+        REFERENCES GestionIdentidadAcad.Usuarios(id_usuario),
+    CONSTRAINT FK_Sesiones_Materia FOREIGN KEY (id_mat)
+        REFERENCES GestionIdentidadAcad.Materias(id_mat)
+)
+GO
+
+-- Tabla de inscripciones
+CREATE TABLE GestionIdentidadAcad.Inscripciones (
+    id_inscripcion INT IDENTITY(1,1) PRIMARY KEY,
+    id_estudiante INT NOT NULL,
+    id_sesion INT NOT NULL,
+    fecha_inscripcion DATETIME DEFAULT GETDATE(),
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at >= updated_at),
+    deleted_at DATETIME NULL DEFAULT GETDATE() CHECK(created_at > deleted_at),
+    CONSTRAINT FK_Inscripciones_Estudiante FOREIGN KEY (id_estudiante)
+        REFERENCES GestionIdentidadAcad.Usuarios(id_usuario),
+    CONSTRAINT FK_Inscripciones_Sesion FOREIGN KEY (id_sesion)
+        REFERENCES GestionIdentidadAcad.Sesiones(id_sesion),
+    CONSTRAINT UQ_Inscripcion UNIQUE (id_estudiante, id_sesion)
+)
+GO
+
 CREATE SCHEMA GestionTutores
 GO
 
