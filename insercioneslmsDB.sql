@@ -37,3 +37,56 @@ INSERT INTO GestionIdentidadAcad.PerfilesDatos(nombres, apellidos, telefono, car
    (3, 'Luis Lenin', 'Aguirre Vílchez', '77777777', 'Ingeniería en Terraria'),
    (4, 'Charlotte', 'Aguirre Molina', '67676767', 'Ingeniería en SA2')
 GO
+
+-- Inserciones Tabla 3.1 HORARIOS_TUTOR
+INSERT INTO HORARIOS_TUTOR (id_tutor,horario,created_at,updated_at)
+VALUES
+(1,'08:00','2026-06-01 08:00:00',NULL),
+(1,'10:00','2026-06-01 10:00:00',NULL),
+(2,'13:00','2026-06-02 13:00:00','2026-06-02 13:30:00'),
+(3,'15:00','2026-06-03 15:00:00',NULL)
+GO
+-- Inserciones Tabla 3.2 TUTOR_MATERIA
+INSERT INTO TUTOR_MATERIA (id_tutor,id_mat,created_at,updated_at)
+VALUES
+(1,1,'2026-06-01 08:15:00',NULL),
+(1,2,'2026-06-01 08:20:00',NULL),
+(2,1,'2026-06-02 09:00:00','2026-06-02 09:20:00'),
+(3,3,'2026-06-03 11:00:00',NULL)
+GO
+
+INSERT INTO TUTORES_VALIDACION (id_tutor,is_valid,created_at,updated_at)
+VALUES
+(1,1,'2026-06-01 09:00:00',NULL),
+(2,1,'2026-06-02 09:30:00','2026-06-02 10:00:00'),
+(3,0,'2026-06-03 10:00:00',NULL)
+GO
+
+INSERT INTO ACREDITACIONES (id_tutor,archivo,created_at,updated_at)
+VALUES
+(1,0x123456,'2026-06-01 10:00:00',NULL),
+(2,0x789ABC,'2026-06-02 10:30:00','2026-06-02 11:00:00'),
+(3,0x456DEF,'2026-06-03 12:00:00',NULL)
+GO
+
+INSERT INTO PERFIL_TUTOR (id_tutor,descripcion,created_at,updated_at)
+VALUES
+(1,'Tutor con conocimientos en Bases de Datos I, SQL Server, consultas SELECT, creación de tablas, llaves primarias y llaves foráneas','2026-06-01 11:00:00',NULL),
+(2,'Tutor con dominio en programación estructurada, lógica de programación, algoritmos, ciclos y condicionales','2026-06-02 11:30:00','2026-06-02 12:00:00'),
+(3,'Tutor en proceso de validación académica, con experiencia básica en apoyo estudiantil','2026-06-03 12:30:00',NULL)
+GO
+
+INSERT INTO CALIFICACIONES_TUTOR (id_tutor,puntuacion,created_at,updated_at)
+VALUES
+(1,4.8,'2026-06-05 14:00:00',NULL),
+(1,4.5,'2026-06-06 15:00:00','2026-06-06 15:10:00'),
+(2,4.2,'2026-06-07 16:00:00',NULL),
+(3,3.8,'2026-06-08 17:00:00',NULL)
+GO
+INSERT INTO METRICAS_APRENDIZAJE (periodo,id_mat,estado_sesion,total_inscritos,total_asistencias,promedio_puntuacion,created_at,updated_at)
+VALUES
+('Primer semestre 2026',1,'Finalizada',20,18,4.7,'2026-06-10 08:00:00',NULL),
+('Primer semestre 2026',2,'Activa',15,12,4.3,'2026-06-11 09:00:00','2026-06-11 09:30:00'),
+('Segundo semestre 2026',3,'Finalizada',25,22,4.6,'2026-06-12 10:00:00',NULL),
+('Segundo semestre 2026',1,'Cancelada',8,0,NULL,'2026-06-13 11:00:00',NULL)
+GO
