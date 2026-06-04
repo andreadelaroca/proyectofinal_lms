@@ -138,7 +138,7 @@ CREATE TABLE GestionRolesPermisos.Auditoria (
     , tabla VARCHAR(50) NOT NULL
     , columna VARCHAR(50) NOT NULL
     , tupla INT NOT NULL
-    , id_operacion INT NOT NULL
+    , operacion NVARCHAR(50) NOT NULL
     , estado_anterior VARCHAR(MAX) NULL
     , estado_actual VARCHAR(MAX) NULL
     , fecha DATETIME NOT NULL DEFAULT GETDATE()
@@ -256,8 +256,7 @@ GO
 --Tabla 18: Sesiones
 CREATE TABLE GestionEventos.Sesiones (
 	id_sesion INT IDENTITY(1,1) CONSTRAINT PK_id_sesion PRIMARY KEY
-    , id_tutor INT CONSTRAINT FK_id_tutor FOREIGN KEY REFERENCES GestionTutores.Tutores(id_tutor)
-    , id_materia INT CONSTRAINT FK_id_materia FOREIGN KEY REFERENCES GestionIdentidadAcad.Materias(id_materia)
+    , id_tutor_materia INT CONSTRAINT FK_id_tutor_mat FOREIGN KEY REFERENCES GestionTutores.TutorMateria(id_tutor_materia)
 	, fecha DATE NOT NULL
 	, hora_inicio TIME NOT NULL
 	, hora_fin TIME NOT NULL
