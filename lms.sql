@@ -55,6 +55,7 @@ CREATE TABLE GestionRolesPermisos.DetallesPermisos (
 )
 GO
 
+
 -- Tabla de los permisos que tiene cada rol
 CREATE TABLE GestionRolesPermisos.PermisosRoles (
     id_rol INT NOT NULL
@@ -70,18 +71,39 @@ CREATE TABLE GestionRolesPermisos.PermisosRoles (
 )
 GO
 
--- Tabla Usuarios
 CREATE TABLE GestionIdentidadAcad.Usuarios (
-    id_usuario INT IDENTITY(1,1) CONSTRAINT PK_Usuarios PRIMARY KEY
-    , email NVARCHAR(150) UNIQUE NOT NULL           
-    , pass_hash CHAR(60) NOT NULL              
-    , estado_usuario BIT NOT NULL DEFAULT 1
-    , id_rol INT NOT NULL CONSTRAINT FK_Usuarios_Roles FOREIGN KEY (id_rol) REFERENCES GestionRolesPermisos.Roles(id_rol)
+id_usuario INT IDENTITY(1,1) CONSTRAINT PK_Usuarios PRIMARY KEY
+, email NVARCHAR(150) UNIQUE NOT NULL
+, pass_hash CHAR(60) NOT NULL
+, estado_usuario BIT NOT NULL DEFAULT 1
+, id_rol INT NOT NULL
+, created_at DATETIME DEFAULT GETDATE()
+, updated_at DATETIME NULL DEFAULT GETDATE()
+, deleted_at DATETIME NULL
+, CONSTRAINT FK_Usuarios_Roles FOREIGN KEY (id_rol) REFERENCES GestionRolesPermisos.Roles(id_rol)
+, CONSTRAINT CK_usuarios_updated CHECK(updated_at IS NULL OR updated_at >= created_at)
+, CONSTRAINT CK_usuarios_deleted CHECK(deleted_at IS NULL OR deleted_at >= created_at)
+)
+GO
+
+CREATE TABLE GestionIdentidadAcad.PerfilesDatos (
+    id_usuario INT CONSTRAINT PK_PerfilesDatos PRIMARY KEY
+    , nombres NVARCHAR(100) NOT NULL
+    , apellidos NVARCHAR(100) NOT NULL
+    , telefono NVARCHAR(20) NULL
+    , carrera NVARCHAR(100) NULL
     , created_at DATETIME DEFAULT GETDATE()
     , updated_at DATETIME NULL DEFAULT GETDATE()
-    , deleted_at DATETIME NULL
-    , CONSTRAINT CK_usuarios_updated CHECK(updated_at IS NULL OR updated_at >= created_at)
-    , CONSTRAINT CK_usuarios_deleted CHECK(deleted_at IS NULL OR deleted_at >= created_at)    
+    , CONSTRAINT FK_PerfilesDatos_Usuarios FOREIGN KEY (id_usuario) REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
+)
+GO
+
+CREATE TABLE GestionIdentidadAcad.Materias (
+    id_materia INT IDENTITY(1,1) CONSTRAINT PK_Materias PRIMARY KEY
+    , cod_materia NVARCHAR(20) UNIQUE NOT NULL
+    , nombre NVARCHAR(100) NOT NULL
+    , creditos INT NOT NULL CHECK(creditos >= 0)
+    , created_at DATETIME DEFAULT GETDATE()
 )
 GO
 
@@ -92,44 +114,32 @@ CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
 	, estado BIT NOT NULL
 	, ip NVARCHAR(45) NOT NULL
 	, fecha_hora DATETIME NOT NULL DEFAULT GETDATE()
-	, CONSTRAINT PK_RegistrosAcceso PRIMARY KEY (id_log)
-	, CONSTRAINT FK_Registros_Usuarios FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-    , CONSTRAINT CK_ip CHECK(ip like '%.%.%.%')
+	, CONSTRAINT PK_RegistrosAcceso PRIMARY KEY(id_log)
+    , CONSTRAINT FK_Registros_Usuarios FOREIGN KEY (id_usuario) REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
+    , CONSTRAINT CK_ip CHECK(ip LIKE '%[0-9].%[0-9].%[0-9].%[0-9]' OR ip LIKE '%:%')
 )
 GO
 
 -- Tabla general del historial de auditoría
 CREATE TABLE GestionRolesPermisos.AuditoriaHistorial (
     id_audit INT IDENTITY(1,1),
-    id_usuario INT
-	NOT NULL,
-
-    CONSTRAINT PK_AuditoriaHistorial
-	PRIMARY KEY (id_audit),
-    CONSTRAINT FK_Historial_Usuarios
-	FOREIGN KEY (id_usuario)
-	REFERENCES Usuarios(id_usuario)
+    id_usuario INT NOT NULL,
+    CONSTRAINT PK_AuditoriaHistorial PRIMARY KEY(id_audit),
+    CONSTRAINT FK_Historial_Usuarios FOREIGN KEY(id_usuario) REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
 )
 GO
 
 -- Detalle técnico del "antes" y "después" de cada cambio en los datos
 CREATE TABLE GestionRolesPermisos.Auditoria (
-    id_audit INT NOT NULL,
-    tabla VARCHAR(50) 
-	NOT NULL,
-    columna VARCHAR(50) 
-	NOT NULL,
-    tupla INT NOT NULL,
-    id_operacion INT 
-	NOT NULL,
-    estado_anterior VARCHAR(MAX),
-    estado_actual VARCHAR(MAX),
-    fecha DATETIME 
-	NOT NULL,
-    
-    CONSTRAINT FK_Auditoria_Historial
-	FOREIGN KEY (id_audit)
-	REFERENCES AuditoriaHistorial(id_audit)
+    id_audit INT NOT NULL
+    , tabla VARCHAR(50) NOT NULL
+    , columna VARCHAR(50) NOT NULL
+    , tupla INT NOT NULL
+    , id_operacion INT NOT NULL
+    , estado_anterior VARCHAR(MAX) NULL
+    , estado_actual VARCHAR(MAX) NULL
+    , fecha DATETIME NOT NULL DEFAULT GETDATE()
+    , CONSTRAINT FK_Auditoria_Historial FOREIGN KEY (id_audit) REFERENCES GestionRolesPermisos.AuditoriaHistorial(id_audit)
 )
 GO
 
@@ -246,7 +256,7 @@ GO
 CREATE TABLE GestionEventos.Sesiones (
 	id_sesion INT IDENTITY(1,1) CONSTRAINT PK_id_sesion PRIMARY KEY
     , id_tutor INT CONSTRAINT FK_id_tutor FOREIGN KEY REFERENCES GestionTutores.Tutores(id_tutor)
-    , id_materia INT CONSTRAINT FK_id_materia FOREIGN KEY REFERENCES GestionIdentidadCad.Materias(id_materia)
+    , id_materia INT CONSTRAINT FK_id_materia FOREIGN KEY REFERENCES GestionIdentidadAcad.Materias(id_materia)
 	, fecha DATE NOT NULL
 	, hora_inicio TIME NOT NULL
 	, hora_fin TIME NOT NULL
@@ -279,12 +289,12 @@ GO
 
 --Tabla 4.3: Asistencias
 CREATE TABLE GestionEventos.Asistencias (
-	id_asistencia INT IDENTITY(1,1) CONSTRAINT PK_id_inscripcion PRIMARY KEY
+	id_asistencia INT IDENTITY(1,1) CONSTRAINT PK_id_asistencia PRIMARY KEY
 	, id_inscripcion INT CONSTRAINT FK_id_inscripcion FOREIGN KEY REFERENCES GestionEventos.Inscripciones(id_inscripcion)
 	, estatus_asistencia NVARCHAR(30) CONSTRAINT CK_estatus_asistencia CHECK(estatus_asistencia IN ('Presente', 'Tarde', 'Falta justificada', 'Falta injustificada'))
 	, participacion TINYINT CONSTRAINT CK_participacion CHECK(participacion BETWEEN 0 AND 5)
 	, fecha_registro DATE NOT NULL DEFAULT GETDATE()
-	, created_at DATETIME CONSTRAINT DF_created_at_ses DEFAULT GETDATE()
+	, created_at DATETIME CONSTRAINT DF_created_at_asist DEFAULT GETDATE()
 	, updated_at DATETIME NULL DEFAULT GETDATE()
 	, deleted_at DATETIME NULL
     , CONSTRAINT CK_asistencias_updated CHECK(updated_at IS NULL OR updated_at >= created_at)
