@@ -24,7 +24,7 @@ INSERT INTO GestionRolesPermisos.PermisosRoles(id_rol, id_permiso) VALUES
     (2, 2)
 GO
 
-INSERT INTO GestionIdentidadAcad.Usuarios(email, pass_hash, id_rol) VALUES
+INSERT INTO GestionIdentidadAcad.Usuarios(id_usuarios, email, pass_hash, id_rol) VALUES
     ('asodelaroca@uamv.edu.ni', HASHBYTES('SHA2_256', 'papupro123'), 1),
     ('masarante@uamv.edu.ni', HASHBYTES('SHA2_256', 'lalalala362Y9ngrhjbasjn'), 2),
     ('laguirrev@uamv.edu.ni', HASHBYTES('SHA2_256', 'FBBRBRBG37478hf_h__'), 1),
