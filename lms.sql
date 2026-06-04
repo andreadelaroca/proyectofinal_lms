@@ -115,7 +115,7 @@ CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
     id_log INT IDENTITY(1,1)
 	, id_usuario INT NOT NULL
 	, estado BIT NOT NULL
-	, ip NVARCHAR(45) NOT NULL
+	, ip VARCHAR(50) DEFAULT (CAST(CONNECTIONPROPERTY('usuario_direccion_ip') AS VARCHAR(50)))
 	, fecha_hora DATETIME NOT NULL DEFAULT GETDATE()
 	, CONSTRAINT PK_RegistrosAcceso PRIMARY KEY(id_log)
     , CONSTRAINT FK_Registros_Usuarios FOREIGN KEY (id_usuario) REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)

@@ -24,28 +24,35 @@ INSERT INTO GestionRolesPermisos.PermisosRoles(id_rol, id_permiso) VALUES
     (2, 2)
 GO
 
-INSERT INTO GestionIdentidadAcad.Usuarios(id_usuario, email, pass_hash, id_rol) VALUES
+INSERT INTO GestionIdentidadAcad.Usuarios(email, pass_hash, id_rol) VALUES
     ('asodelaroca@uamv.edu.ni', HASHBYTES('SHA2_256', 'papupro123'), 1),
     ('masarante@uamv.edu.ni', HASHBYTES('SHA2_256', 'lalalala362Y9ngrhjbasjn'), 2),
     ('laguirrev@uamv.edu.ni', HASHBYTES('SHA2_256', 'FBBRBRBG37478hf_h__'), 1),
     ('caaguirre@uamv.edu.ni', HASHBYTES('SHA2_256', 'contrasenia'), 2)
 GO
 
-INSERT INTO GestionIdentidadAcad.PerfilesDatos(nombres, apellidos, telefono, carrera) VALUES
+INSERT INTO GestionIdentidadAcad.PerfilesDatos(id_usuario, nombres, apellidos, telefono, carrera) VALUES
    (1, 'Andrea Sofía', 'de la Roca Delgado', '88888888', 'Ingeniería en Gastronomía'),
    (2, 'María Alejandra', 'Sarante Salinas', '66666666', 'Licenciatura en Francés'),
    (3, 'Luis Lenin', 'Aguirre Vílchez', '77777777', 'Ingeniería en Terraria'),
    (4, 'Charlotte', 'Aguirre Molina', '67676767', 'Ingeniería en SA2')
 GO
 
--- Inserciones Tabla 3.1 HORARIOS_TUTOR
-INSERT INTO HORARIOS_TUTOR (id_tutor,horario,created_at,updated_at)
-VALUES
-(1,'08:00','2026-06-01 08:00:00',NULL),
-(1,'10:00','2026-06-01 10:00:00',NULL),
-(2,'13:00','2026-06-02 13:00:00','2026-06-02 13:30:00'),
-(3,'15:00','2026-06-03 15:00:00',NULL)
+INSERT INTO GestionIdentidadAcad.Materias(cod_materia, nombre, creditos) VALUES
+    ('CNU03250', 'Base de Datos I', 3),
+    ('INOP0125', 'Identidad Nacional y Orgullo Patrio', 3),
+    ('FIS0111', 'Física Aplicada', 3)
 GO
+
+INSERT INTO 
+
+INSERT INTO GestionTutores.HorariosTutor (id_tutor,  dia_semana, hora_inicio, hora_fin) VALUES
+    (1,2,'08:00:00','09:00:00'),
+    (1,3,'10:00:00','12:00:00'),
+    (2,4,'14:00:00','15:30:00'),
+    (3,3,'15:00:00','16:00:00')
+GO
+
 -- Inserciones Tabla 3.2 TUTOR_MATERIA
 INSERT INTO TUTOR_MATERIA (id_tutor,id_mat,created_at,updated_at)
 VALUES
@@ -69,7 +76,7 @@ VALUES
 (3,0x456DEF,'2026-06-03 12:00:00',NULL)
 GO
 
-INSERT INTO PERFIL_TUTOR (id_tutor,descripcion,created_at,updated_at)
+INSERT INTO PERFIL_TUTOR (id_tutor,descripcion)
 VALUES
 (1,'Tutor con conocimientos en Bases de Datos I, SQL Server, consultas SELECT, creación de tablas, llaves primarias y llaves foráneas','2026-06-01 11:00:00',NULL),
 (2,'Tutor con dominio en programación estructurada, lógica de programación, algoritmos, ciclos y condicionales','2026-06-02 11:30:00','2026-06-02 12:00:00'),
