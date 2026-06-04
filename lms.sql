@@ -29,7 +29,7 @@ GO
 CREATE SCHEMA GestionEventos
 GO
 
--- Tabla 1.1: Roles
+-- Tabla 1: Roles
 CREATE TABLE GestionRolesPermisos.Roles (
     id_rol INT IDENTITY(1,1) CONSTRAINT PK_roles PRIMARY KEY
 	, nombre NVARCHAR(50) NOT NULL
@@ -42,7 +42,7 @@ CREATE TABLE GestionRolesPermisos.Roles (
 )
 GO
 
--- Tabla de permisos y operaciones disponibles
+-- Tabla 2: DetallesPermisos, Detalles de permisos y operaciones disponibles
 CREATE TABLE GestionRolesPermisos.DetallesPermisos (
     id_permiso INT IDENTITY(1,1) CONSTRAINT PK_DetallesPermisos PRIMARY KEY (id_permiso)
 	, nombre NVARCHAR(50) NOT NULL
@@ -56,7 +56,7 @@ CREATE TABLE GestionRolesPermisos.DetallesPermisos (
 GO
 
 
--- Tabla de los permisos que tiene cada rol
+-- Tabla 3: PermisosRoles, Permisos que tiene cada rol
 CREATE TABLE GestionRolesPermisos.PermisosRoles (
     id_rol INT NOT NULL
     , id_permiso INT NOT NULL
@@ -71,6 +71,7 @@ CREATE TABLE GestionRolesPermisos.PermisosRoles (
 )
 GO
 
+--Tabla 4: Usuarios
 CREATE TABLE GestionIdentidadAcad.Usuarios (
 id_usuario INT IDENTITY(1,1) CONSTRAINT PK_Usuarios PRIMARY KEY
 , email NVARCHAR(150) UNIQUE NOT NULL
@@ -86,6 +87,7 @@ id_usuario INT IDENTITY(1,1) CONSTRAINT PK_Usuarios PRIMARY KEY
 )
 GO
 
+--Tabla 5: PerfilesDatos
 CREATE TABLE GestionIdentidadAcad.PerfilesDatos (
     id_usuario INT CONSTRAINT PK_PerfilesDatos PRIMARY KEY
     , nombres NVARCHAR(100) NOT NULL
@@ -98,6 +100,7 @@ CREATE TABLE GestionIdentidadAcad.PerfilesDatos (
 )
 GO
 
+--Tabla 6: Materias
 CREATE TABLE GestionIdentidadAcad.Materias (
     id_materia INT IDENTITY(1,1) CONSTRAINT PK_Materias PRIMARY KEY
     , cod_materia NVARCHAR(20) UNIQUE NOT NULL
@@ -107,7 +110,7 @@ CREATE TABLE GestionIdentidadAcad.Materias (
 )
 GO
 
--- Bitacora de accesos e intentos de inicio de sesión
+-- Tabla 7: RegistrosAcceso, Bitácora de accesos e intentos de inicio de sesión
 CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
     id_log INT IDENTITY(1,1)
 	, id_usuario INT NOT NULL
@@ -120,7 +123,7 @@ CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
 )
 GO
 
--- Tabla general del historial de auditoría
+-- Tabla 8: AuditoriaHistorial, Tabla general del historial de auditoría
 CREATE TABLE GestionRolesPermisos.AuditoriaHistorial (
     id_audit INT IDENTITY(1,1),
     id_usuario INT NOT NULL,
@@ -129,7 +132,7 @@ CREATE TABLE GestionRolesPermisos.AuditoriaHistorial (
 )
 GO
 
--- Detalle técnico del "antes" y "después" de cada cambio en los datos
+-- Tabla 9: Auditoria, Detalle técnico del "antes" y "después" de cada cambio en los datos
 CREATE TABLE GestionRolesPermisos.Auditoria (
     id_audit INT NOT NULL
     , tabla VARCHAR(50) NOT NULL
@@ -143,6 +146,7 @@ CREATE TABLE GestionRolesPermisos.Auditoria (
 )
 GO
 
+--Tabla 10: Tutores
 CREATE TABLE GestionTutores.Tutores (
     id_tutor INT CONSTRAINT PK_Tutores PRIMARY KEY
     , estado_tutor BIT NOT NULL DEFAULT 0
@@ -152,7 +156,7 @@ CREATE TABLE GestionTutores.Tutores (
 )
 GO
 
--- Tabla 3.1 HORARIOS_TUTOR
+-- Tabla 11: HorariosTutor
 CREATE TABLE GestionTutores.HorariosTutor (
     id_horario INT IDENTITY(1,1) PRIMARY KEY,
     id_tutor INT NOT NULL,
@@ -166,8 +170,7 @@ CREATE TABLE GestionTutores.HorariosTutor (
 )
 GO
 
--- Tabla 3.2 TUTOR_MATERIA
-
+-- Tabla 12: TutorMateria
 CREATE TABLE GestionTutores.TutorMateria (
     id_tutor_materia INT IDENTITY(1,1) PRIMARY KEY,
     id_tutor INT NOT NULL,
@@ -181,8 +184,7 @@ CREATE TABLE GestionTutores.TutorMateria (
 )
 GO
 
-
--- Tabla 3.3 TUTORES_VALIDACION
+-- Tabla 13: TutoresValidacion
 CREATE TABLE GestionTutores.TutoresValidacion (
     id_validacion INT IDENTITY(1,1) PRIMARY KEY,
     id_tutor INT NOT NULL,
@@ -195,7 +197,7 @@ CREATE TABLE GestionTutores.TutoresValidacion (
 )
 GO
 
--- Tabla 3.4 ACREDITACIONES
+-- Tabla 14: Acreditaciones
 CREATE TABLE GestionTutores.Acreditaciones (
     id_acreditacion INT IDENTITY(1,1) PRIMARY KEY,
     id_tutor INT NOT NULL,
@@ -208,8 +210,7 @@ CREATE TABLE GestionTutores.Acreditaciones (
 )
 GO
 
-
--- Tabla 3.5 PERFIL_TUTOR
+-- Tabla 15: PerfilTutor
 CREATE TABLE GestionTutores.PerfilTutor (
     id_perfil_tutor INT IDENTITY(1,1) PRIMARY KEY,
     id_tutor INT NOT NULL,
@@ -222,7 +223,7 @@ CREATE TABLE GestionTutores.PerfilTutor (
 )
 GO
 
--- Tabla 3.6 CALIFICACIONES_TUTOR
+-- Tabla 16: CalificacionesTutor
 CREATE TABLE GestionTutores.CalificacionesTutor (
     id_calificacion INT IDENTITY(1,1) CONSTRAINT PK_CalificacionesTutor PRIMARY KEY
     , id_tutor INT NOT NULL,
@@ -234,7 +235,7 @@ CREATE TABLE GestionTutores.CalificacionesTutor (
 )
 GO
 
--- Tabla 3.7 METRICAS_APRENDIZAJE
+-- Tabla 17: MetricasAprendizaje
 CREATE TABLE GestionTutores.MetricasAprendizaje (
     id_metrica INT IDENTITY(1,1) CONSTRAINT PK_MetricasAprendizaje PRIMARY KEY
     , periodo NVARCHAR(50) NOT NULL
@@ -252,7 +253,7 @@ CREATE TABLE GestionTutores.MetricasAprendizaje (
 )
 GO
 
---Tabla 4.1: Sesiones
+--Tabla 18: Sesiones
 CREATE TABLE GestionEventos.Sesiones (
 	id_sesion INT IDENTITY(1,1) CONSTRAINT PK_id_sesion PRIMARY KEY
     , id_tutor INT CONSTRAINT FK_id_tutor FOREIGN KEY REFERENCES GestionTutores.Tutores(id_tutor)
@@ -271,7 +272,7 @@ CREATE TABLE GestionEventos.Sesiones (
 )
 GO
 
---Tabla 4.2: Inscripciones
+--Tabla 19: Inscripciones
 CREATE TABLE GestionEventos.Inscripciones (
 	id_inscripcion INT IDENTITY(1,1) CONSTRAINT PK_id_inscripcion PRIMARY KEY
 	, id_estudiante INT CONSTRAINT FK_id_estudiante FOREIGN KEY REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
@@ -287,7 +288,7 @@ CREATE TABLE GestionEventos.Inscripciones (
 )
 GO
 
---Tabla 4.3: Asistencias
+--Tabla 20: Asistencias
 CREATE TABLE GestionEventos.Asistencias (
 	id_asistencia INT IDENTITY(1,1) CONSTRAINT PK_id_asistencia PRIMARY KEY
 	, id_inscripcion INT CONSTRAINT FK_id_inscripcion FOREIGN KEY REFERENCES GestionEventos.Inscripciones(id_inscripcion)
@@ -303,7 +304,7 @@ CREATE TABLE GestionEventos.Asistencias (
 )
 GO
 
---Tabla 4.4: FeedbackEvaluaciones
+--Tabla 21: FeedbackEvaluaciones
 CREATE TABLE GestionEventos.FeedbackEvaluaciones (
 	id_feedback INT IDENTITY(1,1) CONSTRAINT PK_id_feedback PRIMARY KEY
 	, id_inscripcion INT FOREIGN KEY REFERENCES GestionEventos.Inscripciones(id_inscripcion)
