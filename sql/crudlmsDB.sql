@@ -103,3 +103,61 @@ INSERT INTO GestionEventos.FeedbackEvaluaciones (id_inscripcion, comentario, pun
     (6, 'Excelente dominio del tema de enrutamiento.', 5),
     (8, 'La clase de diseño fue muy interactiva.', 4)
 GO
+
+-- Update
+
+UPDATE GestionIdentidadAcad.Usuarios
+SET email = N'feperez@uamv.edu.ni'
+WHERE id_usuario = 9
+
+UPDATE GestionIdentidadAcad.PerfilesDatos
+SET telefono = '55555544'
+WHERE id_usuario = 9
+
+UPDATE GestionIdentidadAcad.Materias
+SET nombre = N'Tecnologías de Redes'
+WHERE cod_materia = 'RED0150'
+
+UPDATE GestionTutores.Tutores
+SET estado_tutor = 0
+WHERE id_tutor = 12
+
+UPDATE GestionTutores.HorariosTutor
+SET hora_fin = '17:30:00'
+WHERE id_tutor = 9
+
+UPDATE GestionTutores.TutorMateria
+SET id_tutor = 2
+WHERE id_tutor = 9 AND id_materia = 6
+
+UPDATE GestionTutores.TutoresValidacion
+SET is_valid = 0
+WHERE id_tutor = 2
+
+UPDATE GestionTutores.Acreditaciones
+SET file_name = 'cert_diseno1.pdf'
+WHERE file_name = 'cert_diseno.pdf'
+
+UPDATE GestionTutores.PerfilTutor
+SET descripcion = 'Arquitecta y diseñadora con 6 años de experiencia en UI/UX'
+WHERE id_tutor = 12
+
+UPDATE GestionTutores.CalificacionesTutor
+SET puntuacion = 5.0
+WHERE id_tutor = 9
+
+UPDATE GestionTutores.MetricasAprendizaje
+SET total_inscritos = 11
+WHERE id_metrica = 6
+
+UPDATE GestionEventos.Sesiones
+SET ubicacion = 'Auditorio central'
+WHERE id_sesion = 6
+
+UPDATE GestionEventos.Inscripciones
+SET estado = 0
+WHERE id_inscripcion = 9
+
+UPDATE GestionEventos.Asistencias
+SET estatus_asistencia = 'Falta justificada'
+WHERE id_asistencia = 5
