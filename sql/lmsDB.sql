@@ -121,18 +121,9 @@ CREATE TABLE GestionRolesPermisos.RegistrosAcceso (
 )
 GO
 
--- Tabla 8: AuditoriaHistorial, Tabla general del historial de auditoría
-CREATE TABLE GestionRolesPermisos.AuditoriaHistorial (
-    id_audit INT IDENTITY(1,1),
-    id_usuario INT NOT NULL,
-    CONSTRAINT PK_AuditoriaHistorial PRIMARY KEY(id_audit),
-    CONSTRAINT FK_Historial_Usuarios FOREIGN KEY(id_usuario) REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
-)
-GO
-
--- Tabla 9: Auditoria, Detalle técnico del "antes" y "después" de cada cambio en los datos
+-- Tabla 8: Auditoria, Detalle técnico del "antes" y "después" de cada cambio en los datos
 CREATE TABLE GestionRolesPermisos.Auditoria (
-    id_audit INT NOT NULL
+    id_audit INT IDENTITY(1,1)
     , tabla VARCHAR(50) NOT NULL
     , columna VARCHAR(50) NOT NULL
     , tupla INT NOT NULL
@@ -140,9 +131,19 @@ CREATE TABLE GestionRolesPermisos.Auditoria (
     , estado_anterior VARCHAR(MAX) NULL
     , estado_actual VARCHAR(MAX) NULL
     , fecha DATETIME NOT NULL DEFAULT GETDATE()
-    , CONSTRAINT FK_Auditoria_Historial FOREIGN KEY (id_audit) REFERENCES GestionRolesPermisos.AuditoriaHistorial(id_audit)
+    , CONSTRAINT PK_Auditoria PRIMARY KEY(id_audit)
 )
 GO
+
+-- Tabla 9: AuditoriaHistorial, Tabla general del historial de auditoría
+CREATE TABLE GestionRolesPermisos.AuditoriaHistorial (
+    id_audit INT IDENTITY(1,1),
+    id_usuario INT NOT NULL
+    , CONSTRAINT FK_Auditoria_Historial FOREIGN KEY (id_audit) REFERENCES GestionRolesPermisos.Auditoria(id_audit)
+    , CONSTRAINT FK_Historial_Usuarios FOREIGN KEY(id_usuario) REFERENCES GestionIdentidadAcad.Usuarios(id_usuario)
+)
+GO
+
 
 --Tabla 10: Tutores
 CREATE TABLE GestionTutores.Tutores (
