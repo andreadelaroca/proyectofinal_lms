@@ -104,45 +104,60 @@ INSERT INTO GestionEventos.FeedbackEvaluaciones (id_inscripcion, comentario, pun
     (8, 'La clase de diseño fue muy interactiva.', 4)
 GO
 
-USE lmsDB
-GO
+-- Update
 
--- 1. Mostrar todos los usuarios
-SELECT * FROM GestionIdentidadAcad.Usuarios
-GO
+UPDATE GestionIdentidadAcad.Usuarios
+SET email = N'feperez@uamv.edu.ni'
+WHERE id_usuario = 9
 
--- 2. Mostrar los perfiles de los usuarios
-SELECT nombres, apellidos, telefono, carrera FROM GestionIdentidadAcad.PerfilesDatos
-GO
+UPDATE GestionIdentidadAcad.PerfilesDatos
+SET telefono = '55555544'
+WHERE id_usuario = 9
 
--- 3. Mostrar las materias registradas
-SELECT cod_materia, nombre, creditos FROM GestionIdentidadAcad.Materias
-GO
+UPDATE GestionIdentidadAcad.Materias
+SET nombre = N'Tecnologías de Redes'
+WHERE cod_materia = 'RED0150'
 
--- 4. Mostrar los tutores activos
-SELECT id_tutor, estado_tutor FROM GestionTutores.Tutores
-WHERE estado_tutor = 1
-GO
+UPDATE GestionTutores.Tutores
+SET estado_tutor = 0
+WHERE id_tutor = 12
 
--- 5. Mostrar las sesiones disponibles
-SELECT fecha, hora_inicio, hora_fin, ubicacion, cupo_max FROM GestionEventos.Sesiones
-GO
+UPDATE GestionTutores.HorariosTutor
+SET hora_fin = '17:30:00'
+WHERE id_tutor = 9
 
-DELETE FROM GestionEventos.FeedbackEvaluaciones WHERE id_feedback = 4;
-GO
+UPDATE GestionTutores.TutorMateria
+SET id_tutor = 2
+WHERE id_tutor = 9 AND id_materia = 6
 
-DELETE FROM GestionEventos.Asistencias
-WHERE id_asistencia = 4;
-GO
+UPDATE GestionTutores.TutoresValidacion
+SET is_valid = 0
+WHERE id_tutor = 2
 
-DELETE FROM GestionEventos.Inscripciones
-WHERE id_inscripcion = 6;
-GO
+UPDATE GestionTutores.Acreditaciones
+SET file_name = 'cert_diseno1.pdf'
+WHERE file_name = 'cert_diseno.pdf'
 
-DELETE FROM GestionTutores.Acreditaciones
-WHERE file_name = 'cert_redes.pdf';
-GO
+UPDATE GestionTutores.PerfilTutor
+SET descripcion = 'Arquitecta y diseñadora con 6 años de experiencia en UI/UX'
+WHERE id_tutor = 12
 
-DELETE FROM GestionIdentidadAcad.Materias
-WHERE cod_materia = 'DIS0200';
-GO
+UPDATE GestionTutores.CalificacionesTutor
+SET puntuacion = 5.0
+WHERE id_tutor = 9
+
+UPDATE GestionTutores.MetricasAprendizaje
+SET total_inscritos = 11
+WHERE id_metrica = 6
+
+UPDATE GestionEventos.Sesiones
+SET ubicacion = 'Auditorio central'
+WHERE id_sesion = 6
+
+UPDATE GestionEventos.Inscripciones
+SET estado = 0
+WHERE id_inscripcion = 9
+
+UPDATE GestionEventos.Asistencias
+SET estatus_asistencia = 'Falta justificada'
+WHERE id_asistencia = 5
