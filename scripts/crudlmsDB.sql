@@ -127,3 +127,22 @@ GO
 -- 5. Mostrar las sesiones disponibles
 SELECT fecha, hora_inicio, hora_fin, ubicacion, cupo_max FROM GestionEventos.Sesiones
 GO
+
+DELETE FROM GestionEventos.FeedbackEvaluaciones WHERE id_feedback = 4;
+GO
+
+DELETE FROM GestionEventos.Asistencias
+WHERE id_asistencia = 4;
+GO
+
+DELETE FROM GestionEventos.Inscripciones
+WHERE id_inscripcion = 6;
+GO
+
+DELETE FROM GestionTutores.Acreditaciones
+WHERE file_name = 'cert_redes.pdf';
+GO
+
+DELETE FROM GestionIdentidadAcad.Materias
+WHERE cod_materia = 'DIS0200';
+GO
