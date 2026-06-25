@@ -103,3 +103,27 @@ INSERT INTO GestionEventos.FeedbackEvaluaciones (id_inscripcion, comentario, pun
     (6, 'Excelente dominio del tema de enrutamiento.', 5),
     (8, 'La clase de diseño fue muy interactiva.', 4)
 GO
+
+USE lmsDB
+GO
+
+-- 1. Mostrar todos los usuarios
+SELECT * FROM GestionIdentidadAcad.Usuarios
+GO
+
+-- 2. Mostrar los perfiles de los usuarios
+SELECT nombres, apellidos, telefono, carrera FROM GestionIdentidadAcad.PerfilesDatos
+GO
+
+-- 3. Mostrar las materias registradas
+SELECT cod_materia, nombre, creditos FROM GestionIdentidadAcad.Materias
+GO
+
+-- 4. Mostrar los tutores activos
+SELECT id_tutor, estado_tutor FROM GestionTutores.Tutores
+WHERE estado_tutor = 1
+GO
+
+-- 5. Mostrar las sesiones disponibles
+SELECT fecha, hora_inicio, hora_fin, ubicacion, cupo_max FROM GestionEventos.Sesiones
+GO
