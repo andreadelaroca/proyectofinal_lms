@@ -706,10 +706,6 @@ DELETE FROM GestionTutores.Acreditaciones
 WHERE file_name = 'cert_redes.pdf';
 GO
 
-DELETE FROM GestionIdentidadAcad.Materias
-WHERE cod_materia = 'DIS0200';
-GO
-
 -- 1. Mostrar todos los usuarios
 SELECT * FROM GestionIdentidadAcad.Usuarios
 GO
